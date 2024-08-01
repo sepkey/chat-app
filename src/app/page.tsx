@@ -9,19 +9,29 @@ export default async function Home() {
     email = user?.emailAddresses[0].emailAddress;
   }
 
+  console.log(user);
+
   return (
     <div>
       <div className="flex flex-col gap-3 text-3xl">
         <SignedOut>
-          <SignInButton />
+          <SignInButton>
+            <button className="bg-primary w-28 px-4 py-2 border-0 text-xl rounded-md">
+              Sign in
+            </button>
+          </SignInButton>
         </SignedOut>
         <SignedIn>
           <UserButton />
         </SignedIn>
-        <span>First name: {user?.firstName}</span>
-        <span>Last name: {user?.lastName}</span>
-        <span>User name:{user?.username}</span>
-        <span>Email: {email}</span>
+        {user?.username && (
+          <>
+            <span>First name: {user?.firstName}</span>
+            <span>Last name: {user?.lastName}</span>
+            <span>User name:{user?.username}</span>
+            <span>Email: {email}</span>
+          </>
+        )}
       </div>
     </div>
   );
