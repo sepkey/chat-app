@@ -1,16 +1,18 @@
 import { connectMongoDb } from "@/config/db-config";
+import { GetCurrentUserFromMongoDb } from "@/server-actions/users";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
 connectMongoDb();
 
 export default async function Home() {
-  const user = await currentUser();
+  // const user = await currentUser();
 
-  let email = "";
-  if (user?.emailAddresses && user?.emailAddresses.length) {
-    email = user?.emailAddresses[0].emailAddress;
-  }
+  // let email = "";
+  // if (user?.emailAddresses && user?.emailAddresses.length) {
+  //   email = user?.emailAddresses[0].emailAddress;
+  // }
 
+  const user = await GetCurrentUserFromMongoDb();
   return (
     <div>
       <div className="flex flex-col gap-3 text-3xl">
@@ -24,12 +26,12 @@ export default async function Home() {
         <SignedIn>
           <UserButton />
         </SignedIn>
-        {user?.username && (
+        {user?.userName && (
           <>
-            <span>First name: {user?.firstName}</span>
-            <span>Last name: {user?.lastName}</span>
-            <span>User name:{user?.username}</span>
-            <span>Email: {email}</span>
+            {/* <span>First name: {user?.firstName}</span> */}
+            <span>Last name: {user?.name}</span>
+            <span>User name:{user?.userName}</span>
+            <span>Email: {user?.email}</span>
           </>
         )}
       </div>
