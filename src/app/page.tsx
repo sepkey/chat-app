@@ -1,5 +1,7 @@
+import { connectMongoDb } from "@/config/db-config";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
+connectMongoDb();
 
 export default async function Home() {
   const user = await currentUser();
@@ -8,8 +10,6 @@ export default async function Home() {
   if (user?.emailAddresses && user?.emailAddresses.length) {
     email = user?.emailAddresses[0].emailAddress;
   }
-
-  console.log(user);
 
   return (
     <div>
