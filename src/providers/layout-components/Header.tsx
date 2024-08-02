@@ -1,34 +1,37 @@
 "use client";
-import { IUser } from "@/interfaces/user.interface";
 import { GetCurrentUserFromMongoDb } from "@/server-actions/users";
-// import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { Avatar, message } from "antd";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import CurrentUserInfo from "./CurrentUserInfo";
 import { usePathname } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { IUserState, setCurrentUserData } from "@/redux/userSlice";
 
 export default function Header() {
   const pathname = usePathname();
   const isPublicRouter =
     pathname.includes("sign-in") || pathname.includes("sign-up");
 
-  const [currentUser, setCurrentUser] = useState<IUser | null>(null);
+  const dispatch = useDispatch();
+  const { currentUserData }: IUserState = useSelector(
+    (state: any) => state.user
+  );
   const [showCurrentUserInfo, setShowCcurrentUserInfo] =
     useState<boolean>(false);
 
-  const getCurrentUser = async () => {
+  const getCurrentUser = useCallback(async () => {
     try {
       const res = await GetCurrentUserFromMongoDb();
       if (res.error) throw new Error(res.error);
-      setCurrentUser(res);
+      dispatch(setCurrentUserData(res));
     } catch (error: any) {
       message.error(error.message);
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     getCurrentUser();
-  }, []);
+  }, [getCurrentUser]);
 
   if (isPublicRouter) return null;
 
@@ -41,28 +44,17 @@ export default function Header() {
       </div>
       <div>
         <div className="flex gap-3 items-center">
-          <span> {currentUser?.name}</span>
+          <span> {currentUserData?.name}</span>
           <Avatar
-            src={currentUser?.profilePicture}
+            src={currentUserData?.profilePicture}
             className="cursor-pointer"
             onClick={() => setShowCcurrentUserInfo(true)}
           />
-          {/* <SignedOut>
-            <SignInButton>
-              <button className="bg-primary w-28 px-4 py-2 border-0 text-xl rounded-md">
-                Sign in
-              </button>
-            </SignInButton>
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn> */}
         </div>
       </div>
 
       {showCurrentUserInfo && (
         <CurrentUserInfo
-          currentUser={currentUser}
           showCurrentUserInfo={showCurrentUserInfo}
           setShowCurrentUserInfo={setShowCcurrentUserInfo}
         />
