@@ -5,8 +5,13 @@ import { GetCurrentUserFromMongoDb } from "@/server-actions/users";
 import { Avatar, message } from "antd";
 import { useEffect, useState } from "react";
 import CurrentUserInfo from "./CurrentUserInfo";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
+  const pathname = usePathname();
+  const isPublicRouter =
+    pathname.includes("sign-in") || pathname.includes("sign-up");
+
   const [currentUser, setCurrentUser] = useState<IUser | null>(null);
   const [showCurrentUserInfo, setShowCcurrentUserInfo] =
     useState<boolean>(false);
@@ -24,6 +29,8 @@ export default function Header() {
   useEffect(() => {
     getCurrentUser();
   }, []);
+
+  if (isPublicRouter) return null;
 
   return (
     <div className="bg-gray-100 py-1 px-5 flex justify-between items-center">

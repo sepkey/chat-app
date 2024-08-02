@@ -30,6 +30,7 @@ export default function CurrentUserInfo({
   const onLogout = async () => {
     try {
       await signOut();
+      setShowCurrentUserInfo(false);
       message.success("Logged out successfully!");
       router.push("/sign-in");
     } catch (err: any) {
