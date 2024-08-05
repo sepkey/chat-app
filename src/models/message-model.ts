@@ -21,10 +21,6 @@ const messageSchema = new mongoose.Schema(
       type: [mongoose.Schema.Types.ObjectId],
       ref: "users",
     },
-    unreadCounts: {
-      type: Object,
-      default: {},
-    },
   },
   { timestamps: true }
 );

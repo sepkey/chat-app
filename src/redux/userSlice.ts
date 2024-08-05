@@ -1,4 +1,4 @@
-import { IUser } from "@/interfaces/user.interface";
+import { IUser } from "@/interfaces";
 import { createSlice } from "@reduxjs/toolkit";
 
 const userSlice = createSlice({
