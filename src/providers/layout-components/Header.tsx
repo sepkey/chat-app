@@ -5,7 +5,11 @@ import { useCallback, useEffect, useState } from "react";
 import CurrentUserInfo from "./CurrentUserInfo";
 import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { IUserState, setCurrentUserData } from "@/redux/userSlice";
+import {
+  IUserState,
+  setCurrentUserData,
+  setCurrentUserId,
+} from "@/redux/userSlice";
 
 export default function Header() {
   const pathname = usePathname();
@@ -24,6 +28,7 @@ export default function Header() {
       const res = await GetCurrentUserFromMongoDb();
       if (res.error) throw new Error(res.error);
       dispatch(setCurrentUserData(res));
+      dispatch(setCurrentUserId(res._id));
     } catch (error: any) {
       message.error(error.message);
     }
