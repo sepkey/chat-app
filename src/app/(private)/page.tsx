@@ -1,31 +1,16 @@
+"use client";
 import { connectMongoDb } from "@/config/db-config";
-// import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import Chats from "./chatComponents/chats";
+import ChatArea from "./chatComponents/chatArea";
+import { Divider } from "antd";
 connectMongoDb();
 
-export default async function Home() {
+export default function Home() {
   return (
-    <div className="p-5">
-      <h1 className="text-sm">Homepage</h1>
-      {/* <div className="flex flex-col gap-3 text-3xl">
-        <SignedOut>
-          <SignInButton>
-            <button className="bg-primary w-28 px-4 py-2 border-0 text-xl rounded-md">
-              Sign in
-            </button>
-          </SignInButton>
-        </SignedOut>
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
-        {user?.userName && (
-          <>
-             <span>First name: {user?.firstName}</span> 
-            <span>Last name: {user?.name}</span>
-            <span>User name:{user?.userName}</span>
-            <span>Email: {user?.email}</span>
-          </>
-        )}
-      </div> */}
+    <div className="flex h-[85vh]">
+      <Chats />
+      <Divider plain type="vertical" className="h-full border-gray-300 " />
+      <ChatArea />
     </div>
   );
 }
