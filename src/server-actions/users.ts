@@ -31,3 +31,11 @@ export const GetCurrentUserFromMongoDb = async () => {
     return { error: err.message };
   }
 };
+export const GetAllUsers = async () => {
+  try {
+    const users = await UserModel.find({});
+    return JSON.parse(JSON.stringify(users));
+  } catch (err: any) {
+    return { error: err.message };
+  }
+};
