@@ -1,6 +1,7 @@
 "use client";
 import { IUser } from "@/interfaces";
 import { IUserState } from "@/redux/userSlice";
+import { CreateNewChat } from "@/server-actions/chats";
 import { GetAllUsers } from "@/server-actions/users";
 import { Button, Divider, message, Modal, Spin } from "antd";
 import React, {
@@ -22,15 +23,16 @@ export default function NewChatModal({
 }: Props) {
   const [users, setUsers] = useState<IUser[]>([]);
   const [loading, setLoading] = useState(false);
-
-  const { currentUserId }: IUserState = useSelector((state: any) => state.user);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const { currentUserData }: IUserState = useSelector(
+    (state: any) => state.user
+  );
 
   const getUsers = useCallback(async () => {
     try {
       setLoading(true);
       const res = await GetAllUsers();
       if (res.err) throw new Error("There is no user!");
-      console.log(res);
       setUsers(res);
     } catch (err: any) {
       message.error(err.message);
@@ -42,6 +44,24 @@ export default function NewChatModal({
   useEffect(() => {
     getUsers();
   }, [getUsers]);
+
+  async function handleAddChat(userId: string) {
+    try {
+      setSelectedUserId(userId);
+      setLoading(true);
+      const res = await CreateNewChat({
+        users: [userId, currentUserData?._id],
+        createdBy: currentUserData?._id,
+        isGroupChat: false,
+      });
+
+      if (res.error) throw new Error(res.error);
+      message.success("Chat created!");
+      setShowNewChatModal(false);
+    } catch (err: any) {
+      message.error(err.message);
+    }
+  }
   return (
     <Modal
       open={showNewChatModal}
@@ -55,7 +75,7 @@ export default function NewChatModal({
           Create New Chat
         </h1>
 
-        {loading && (
+        {loading && !selectedUserId && (
           <div className="flex justify-center  my-20">
             <Spin />
           </div>
@@ -64,7 +84,7 @@ export default function NewChatModal({
         {!loading && users.length > 0 && (
           <div className="flex flex-col gap-5">
             {users.map((user) => {
-              if (user._id === currentUserId) return null;
+              if (user._id === currentUserData?._id) return null;
               return (
                 <React.Fragment key={user._id}>
                   <div className="flex justify-between items-center">
@@ -78,7 +98,13 @@ export default function NewChatModal({
                         {user.name}
                       </span>
                     </div>
-                    <Button size="small">Open the chat</Button>
+                    <Button
+                      onClick={() => handleAddChat(user._id)}
+                      size="small"
+                      disabled={selectedUserId === user._id && loading}
+                    >
+                      Open the chat
+                    </Button>
                   </div>
                   <Divider className="border-gray-200 my-[1px]" />
                 </React.Fragment>
