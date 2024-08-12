@@ -1,5 +1,6 @@
 "use client";
 import { IUser } from "@/interfaces";
+import { IChatState } from "@/redux/chatSlice";
 import { IUserState } from "@/redux/userSlice";
 import { CreateNewChat } from "@/server-actions/chats";
 import { GetAllUsers } from "@/server-actions/users";
@@ -27,6 +28,8 @@ export default function NewChatModal({
   const { currentUserData }: IUserState = useSelector(
     (state: any) => state.user
   );
+
+  const { chats }: IChatState = useSelector((state: any) => state.chat);
 
   const getUsers = useCallback(async () => {
     try {
@@ -60,6 +63,8 @@ export default function NewChatModal({
       setShowNewChatModal(false);
     } catch (err: any) {
       message.error(err.message);
+    } finally {
+      setLoading(false);
     }
   }
   return (
@@ -84,7 +89,12 @@ export default function NewChatModal({
         {!loading && users.length > 0 && (
           <div className="flex flex-col gap-5">
             {users.map((user) => {
-              if (user._id === currentUserData?._id) return null;
+              const alreadyCreatedChat = chats.find((chat) =>
+                chat.users.find((u) => u._id === user._id)
+              );
+
+              if (user._id === currentUserData?._id || alreadyCreatedChat)
+                return null;
               return (
                 <React.Fragment key={user._id}>
                   <div className="flex justify-between items-center">
