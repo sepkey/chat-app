@@ -1,6 +1,6 @@
 "use client";
 import { IUser } from "@/interfaces";
-import { IChatState } from "@/redux/chatSlice";
+import { IChatState, setChats } from "@/redux/chatSlice";
 import { IUserState } from "@/redux/userSlice";
 import { CreateNewChat } from "@/server-actions/chats";
 import { GetAllUsers } from "@/server-actions/users";
@@ -12,7 +12,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 type Props = {
   showNewChatModal: boolean;
@@ -28,6 +28,7 @@ export default function NewChatModal({
   const { currentUserData }: IUserState = useSelector(
     (state: any) => state.user
   );
+  const dispatch = useDispatch();
 
   const { chats }: IChatState = useSelector((state: any) => state.chat);
 
@@ -60,6 +61,7 @@ export default function NewChatModal({
 
       if (res.error) throw new Error(res.error);
       message.success("Chat created!");
+      dispatch(setChats(res));
       setShowNewChatModal(false);
     } catch (err: any) {
       message.error(err.message);
