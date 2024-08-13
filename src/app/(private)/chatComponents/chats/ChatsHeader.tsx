@@ -25,7 +25,7 @@ export default function ChatsHeader() {
       <input
         type="text"
         placeholder="Search chats..."
-        className="bg-gray-100 w-11/12 border-2 border-solid outline-none border-gray-300 rounded-md px-3 h-12 focus:outline-none focus:border-primary"
+        className="bg-blue-100/60 w-11/12 border-2 border-solid outline-none border-gray-300 rounded-md px-3 h-12 focus:outline-none focus:border-primary"
       />
       {showNewChatModal && (
         <NewChatModal
