@@ -9,7 +9,11 @@ export default function Home() {
   return (
     <div className="flex h-[85vh]">
       <Chats />
-      <Divider plain type="vertical" className="h-full border-gray-300 " />
+      <Divider
+        plain
+        type="vertical"
+        className="h-full border-gray-300 px-0 mx-0"
+      />
       <ChatArea />
     </div>
   );
