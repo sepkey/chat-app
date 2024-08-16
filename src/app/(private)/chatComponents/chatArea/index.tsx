@@ -21,7 +21,7 @@ export default function ChatArea() {
   }
 
   return (
-    <div className="flex-1 ">
+    <div className="flex-1 flex flex-col justify-between">
       <Recipient />
       <Messages />
       <NewMessageForm />
