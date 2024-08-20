@@ -18,6 +18,7 @@ export const GetAllChats = async (userId: string) => {
   try {
     const chats = await ChatModel.find({ users: { $in: [userId] } })
       .populate("users")
+      .populate("lastMessage")
       .sort({
         updatedAt: -1,
       });
