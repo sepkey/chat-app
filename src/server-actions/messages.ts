@@ -19,3 +19,15 @@ export const SendNewMessage = async (payload: {
     return { error: err.message };
   }
 };
+
+export const GetChatMessagesById = async (chatId: string) => {
+  try {
+    const messages = await MessageModel.find({ chat: chatId })
+      .populate("sender")
+      .sort({ createdAt: -1 });
+
+    return JSON.parse(JSON.stringify(messages));
+  } catch (err: any) {
+    return { error: err.message };
+  }
+};
