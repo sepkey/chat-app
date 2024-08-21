@@ -3,6 +3,7 @@ import { IChatState } from "@/redux/chatSlice";
 import { IMessage } from "@/interfaces";
 import { IUserState } from "@/redux/userSlice";
 import dayjs from "dayjs";
+import { formatDateTime } from "@/helpers/date-formats";
 
 type Props = { message: IMessage };
 export default function Message({ message }: Props) {
@@ -20,7 +21,7 @@ export default function Message({ message }: Props) {
             {message.text}
           </p>
           <span className="text-gray-500 text-xs">
-            {dayjs(message.createdAt).format("DD/MM/YYYY HH:mm")}
+            {formatDateTime(message.createdAt)}
           </span>
         </div>
         <img
@@ -46,7 +47,7 @@ export default function Message({ message }: Props) {
             <p className="pt-1 m-0 text-sm">{message.text}</p>
           </div>
           <span className="text-gray-500 text-xs">
-            {dayjs(message.createdAt).format("DD/MM/YYYY HH:mm")}
+            {formatDateTime(message.createdAt)}
           </span>
         </div>
       </div>
