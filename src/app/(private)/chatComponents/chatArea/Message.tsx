@@ -17,7 +17,7 @@ export default function Message({ message }: Props) {
     return (
       <div className="flex gap-2 justify-end">
         <div className="flex flex-col gap-1">
-          <p className="bg-primary text-white py-2 px-5 rounded-tr-none rounded-xl m-0">
+          <p className="bg-primary text-white py-2 px-5 rounded-tr-none rounded-xl text-sm m-0">
             {message.text}
           </p>
           <span className="text-gray-500 text-xs">

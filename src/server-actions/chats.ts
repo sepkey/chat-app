@@ -19,6 +19,7 @@ export const GetAllChats = async (userId: string) => {
     const chats = await ChatModel.find({ users: { $in: [userId] } })
       .populate("users")
       .populate("lastMessage")
+      .populate({ path: "lastMessage", populate: { path: "sender" } })
       .sort({
         updatedAt: -1,
       });

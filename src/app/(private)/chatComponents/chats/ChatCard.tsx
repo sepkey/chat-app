@@ -1,3 +1,4 @@
+import { formatDateTime } from "@/helpers/date-formats";
 import { IChat } from "@/interfaces";
 import { IChatState, setSelectedChat } from "@/redux/chatSlice";
 import { IUserState } from "@/redux/userSlice";
@@ -18,7 +19,7 @@ export default function ChatCard({ chat }: Props) {
 
   // TODO: for last message
   let lastMessage = "";
-  let lastMessageSenderId = "";
+  let lastMessageSenderName = "";
   let lastMessageTime = "";
 
   if (chat.isGroupChat) {
@@ -30,6 +31,15 @@ export default function ChatCard({ chat }: Props) {
     );
     chatName = recieptant?.name!;
     chatImage = recieptant?.profilePicture!;
+  }
+
+  if (chat.lastMessage) {
+    lastMessage = chat.lastMessage.text;
+    lastMessageSenderName =
+      chat.lastMessage.sender._id === currentUserData?._id
+        ? "You"
+        : chat.lastMessage.sender.name.split(" ")[0];
+    lastMessageTime = formatDateTime(chat.lastMessage.createdAt);
   }
 
   const isSelected = chat._id === selectedChat?._id;
@@ -47,11 +57,15 @@ export default function ChatCard({ chat }: Props) {
           alt="profile of user"
           className="w-10 h-10 rounded-full"
         />
-        <span className="text-gray-700 text-sm">{chatName}</span>
+        <div className="flex flex-col gap-1">
+          <span className="text-gray-700 text-sm">{chatName}</span>
+          <span className="text-gray-700 text-sm">
+            {lastMessageSenderName}: {lastMessage}
+          </span>
+        </div>
       </div>
       <div>
-        <span>{lastMessage}</span>
-        <span>{lastMessageTime}</span>
+        <span className="text-xs text-gray-500">{lastMessageTime}</span>
       </div>
     </div>
   );

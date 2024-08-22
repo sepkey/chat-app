@@ -24,7 +24,7 @@ export const GetChatMessagesById = async (chatId: string) => {
   try {
     const messages = await MessageModel.find({ chat: chatId })
       .populate("sender")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: 1 });
 
     return JSON.parse(JSON.stringify(messages));
   } catch (err: any) {
