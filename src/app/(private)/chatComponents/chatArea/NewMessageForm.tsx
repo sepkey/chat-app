@@ -3,7 +3,7 @@ import { IChatState } from "@/redux/chatSlice";
 import { IUserState } from "@/redux/userSlice";
 import { SendNewMessage } from "@/server-actions/messages";
 import { Button, message } from "antd";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 export default function NewMessageForm() {
@@ -12,9 +12,11 @@ export default function NewMessageForm() {
   );
   const { selectedChat }: IChatState = useSelector((state: any) => state.chat);
   const [text, setText] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const onSend = async () => {
     try {
+      if (!text) return;
       const dbPayload = {
         text,
         image: "",
@@ -38,6 +40,11 @@ export default function NewMessageForm() {
         type="text"
         value={text}
         onChange={(e) => setText(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            onSend();
+          }
+        }}
         placeholder="Type a message"
         className="flex-1 w-full h-[45px] border border-solid border-gray-300 focus:outline-none focus:border-primary px-5 rounded-sm "
       />
