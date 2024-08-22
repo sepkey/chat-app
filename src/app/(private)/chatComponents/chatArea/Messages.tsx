@@ -31,7 +31,7 @@ export default function Messages() {
   }, [getMessages]);
 
   return (
-    <div className="flex-1">
+    <div className="flex-1 overflow-y-scroll">
       <div className="flex flex-col gap-3 p-3">
         {messages.map((msg) => (
           <Message key={msg._id} message={msg} />
