@@ -11,8 +11,21 @@ export const SendNewMessage = async (payload: {
   try {
     const newMessage = new MessageModel(payload);
     await newMessage.save();
+
+    const existingChat = await ChatModel.findById(payload.chat);
+    const existingUnreadCounts = existingChat?.unreadCounts;
+
+    existingChat?.users.forEach((user: any) => {
+      const userIdInString = user.toString();
+      if (payload.sender !== userIdInString) {
+        existingUnreadCounts[userIdInString] =
+          (existingUnreadCounts[userIdInString] || 0) + 1;
+      }
+    });
+
     await ChatModel.findByIdAndUpdate(payload.chat, {
       lastMessage: newMessage._id,
+      unreadCounts: existingUnreadCounts,
     });
     return { message: "Message sent successfully!" };
   } catch (err: any) {

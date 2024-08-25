@@ -36,13 +36,27 @@ export default function ChatCard({ chat }: Props) {
   if (chat.lastMessage) {
     lastMessage = chat.lastMessage.text;
     lastMessageSenderName =
-      chat.lastMessage.sender._id === currentUserData?._id
+      chat.lastMessage.sender?._id === currentUserData?._id
         ? "You"
-        : chat.lastMessage.sender.name.split(" ")[0];
+        : chat.lastMessage.sender?.name.split(" ")[0];
     lastMessageTime = formatDateTime(chat.lastMessage.createdAt);
   }
 
   const isSelected = chat._id === selectedChat?._id;
+
+  const unreadCounts = () => {
+    if (!chat.unreadCounts || !chat.unreadCounts[currentUserData?._id!]) {
+      return null;
+    }
+
+    return (
+      <div className="bg-red-500 rounded-full h-5 w-5 flex items-center justify-center">
+        <span className="text-white text-xs">
+          {chat.unreadCounts[currentUserData?._id!]}
+        </span>
+      </div>
+    );
+  };
 
   return (
     <div
@@ -65,6 +79,7 @@ export default function ChatCard({ chat }: Props) {
         </div>
       </div>
       <div>
+        {unreadCounts()}
         <span className="text-xs text-gray-500">{lastMessageTime}</span>
       </div>
     </div>
